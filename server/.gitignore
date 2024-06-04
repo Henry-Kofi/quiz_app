@@ -1,0 +1,8 @@
+# modules
+node_modules/
+
+#environmental variables
+.env
+
+# public folders
+public/profile/
