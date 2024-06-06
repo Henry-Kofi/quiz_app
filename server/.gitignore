@@ -8,4 +8,4 @@ node_modules/
 public/profile/
 
 #api test file
-api.test.http
+../api.test.http

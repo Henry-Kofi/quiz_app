@@ -1,0 +1,8 @@
+### create user
+POST http://localhost:4040/api/user/register
+Content-Type: "application/json"
+
+{
+  "email":"henry1s11w12",
+  "password":"henry"
+}
