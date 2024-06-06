@@ -11,10 +11,7 @@ app.use(express.json())
 // app.use(express.urlencoded)
 app.use("/api/user",AuthRoute)
 
-const port = config.port
-if(!port){
-    throw new Error("Port undefined"); 
-}
+const port = config().port
 
 createExternalConnections().then(() => startApp()).catch(error => console.error(error)
 )

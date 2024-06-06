@@ -3,10 +3,7 @@ import config from "../utils/env";
 
 const createExternalConnections =async() => {
     try {
-        const mongoUrl = config.mongoUrl
-        if(!mongoUrl){
-            throw "Mongo url undefined"
-        }
+        const mongoUrl = config().mongoUrl
         await mongoose.connect(mongoUrl)
     } catch (error) {
         throw new Error("External connections: "+error)
