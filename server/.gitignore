@@ -6,6 +6,3 @@ node_modules/
 
 # public folders
 public/profile/
-
-#api test file
-../api.test.http
