@@ -8,11 +8,12 @@ const config = () => {
         const mongoUrl= process.env.MONGO_URL
         const email= process.env.EMAIL
         const password= process.env.PASSWORD
+        const tokenSecret = process.env.SECRET
 
-        if(!port || !mongoUrl || !email || !password){
+        if(!port || !mongoUrl || !email || !password || !tokenSecret){
             throw new Error("Env variables are undefined")
         }
-        return {port,mongoUrl,email,password}
+        return {port,mongoUrl,email,password,tokenSecret}
     } catch (error) {
         throw error
     }

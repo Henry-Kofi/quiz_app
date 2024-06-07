@@ -4,6 +4,8 @@ import userModel from "../../model/user";
 import encrypt from "../../utils/passwordhash";
 import sendMail from "../../utils/email/send";
 import otpTemplate from "../../utils/email/templates/otp";
+import authScheduler from "../helpers/authscheduler";
+import generateOtp from "../helpers/otpgenerator";
 
 const register = async(req:Request,res:Response) =>{
     const {email,password} = req.body;
@@ -19,16 +21,23 @@ const register = async(req:Request,res:Response) =>{
                 salt: hashedPassword.salt,
                 password: hashedPassword.genHash
             },
-            lastActivity: Date.now()
+            lastActivity: Date.now(),
+            otpCode: generateOtp()
         })
         if(!newUser){
             return response.unsuccess(res,404,"Error creating account")
         }
-        const sendmail = await sendMail(email,"Test","Test subject",otpTemplate("123456"))
-        console.log(sendmail)
+
+        const scheduleEvent = await authScheduler.schedule(newUser._id,newUser.email,newUser.otpCode)
+        if(scheduleEvent === false){
+            return response.unsuccess(res,400,"could not sent otp to email")
+        }
+        // const sendmail = await sendMail(email,"Test","Test subject",otpTemplate("123456"))
+        // console.log(sendmail)
         
         return response.success(res,200,"Account submitted, check your mail for verification code to verify the email")
     } catch (error: any) {
+        console.log(error)
         if(error.message === "Mail: Error: No recipients defined"){
             return response.unsuccess(res,404,"Invalid email")
         }

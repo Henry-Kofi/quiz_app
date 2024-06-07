@@ -1,6 +1,6 @@
 import {Schema,model,Document} from "mongoose";
 
-interface UserI extends Document{
+export interface UserI extends Document{
     _id: string
     displayName: string
     email: string
@@ -10,6 +10,7 @@ interface UserI extends Document{
     }
     isVerified: boolean
     lastActivity:number
+    otpCode: string
 }
 
 const userSchema = new Schema<UserI>({
@@ -33,6 +34,9 @@ const userSchema = new Schema<UserI>({
     },
     lastActivity:{
         type: Number
+    },
+    otpCode:{
+        type: String
     }
 },{timestamps: true})
 

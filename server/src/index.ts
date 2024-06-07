@@ -3,12 +3,13 @@ import * as http from "http"
 import config from "./utils/env"
 import createExternalConnections from "./externalconnections"
 import AuthRoute from "./route/user"
+// import
 
 const app: Application = express()
 const server = http.createServer(app)
 
 app.use(express.json())
-// app.use(express.urlencoded)
+// app.use(config)
 app.use("/api/user",AuthRoute)
 
 const port = config().port
