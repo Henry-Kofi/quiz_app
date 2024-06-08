@@ -9,8 +9,12 @@ const verify = async(req:Request,res:Response) => {
         if(!verify || !verify.success){
             return response.unsuccess(res,400,verify.message)
         }
-        // generate otp
-        return response.success(res,200,"Account creation successful",verify.newToken)
+
+        return res.status(200).json({
+            success: true,
+            message: verify.message,
+            token: verify.newToken
+        })
     } catch (error) {
         return response.unsuccess(res,500,"Internal server error")
     }

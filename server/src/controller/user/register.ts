@@ -2,8 +2,6 @@ import { Request, Response } from "express";
 import response from "../../utils/response";
 import userModel from "../../model/user";
 import encrypt from "../../utils/passwordhash";
-import sendMail from "../../utils/email/send";
-import otpTemplate from "../../utils/email/templates/otp";
 import authScheduler from "../helpers/authscheduler";
 import generateOtp from "../helpers/otpgenerator";
 

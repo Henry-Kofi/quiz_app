@@ -1,5 +1,4 @@
 import userModel, { UserI } from "../../model/user"
-import generateOtp from "./otpgenerator"
 import sendMail from "../../utils/email/send"
 import otpTemplate from "../../utils/email/templates/otp"
 import token from "./token"
@@ -28,7 +27,7 @@ class AuthScheduler{
                 return {success: false, message: "user not found"}
             }
             if(user.isVerified){
-                return {success: true}
+                return {success: true, message: "Account already verified"}
             }
             if(Date.now() - user.lastActivity > this.fiveMinutes){
                 return {success: false, message: "verification code has expired"}
@@ -39,7 +38,7 @@ class AuthScheduler{
             const updatedUser = await userModel.findOneAndUpdate({email: email},{
                 isVerified:true,
                 lastActivity: Date.now()
-            })
+            },{new:true})
             if(!updatedUser || !updatedUser.isVerified){
                 return {success: false, message: "Verification failed"}
             }
