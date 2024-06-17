@@ -8,9 +8,16 @@ export interface UserI extends Document{
         salt:string
         password: string
     }
+    image:{
+        filename: string
+        contentType: string
+        imageBase64: string
+    }
     isVerified: boolean
     lastActivity:number
     otpCode: string
+    role: string
+    createdAt: Date
 }
 
 const userSchema = new Schema<UserI>({
@@ -22,12 +29,24 @@ const userSchema = new Schema<UserI>({
     },
     password:{
         salt:{
-            type: String
+            type: String,
         },
         password:{
             type: String
         }
     },
+    image:{
+        filename: {
+            type: String
+        },
+        contentType: {
+            type: String
+        },
+        imageBase64: {
+            type: String
+        }
+    }
+    ,
     isVerified:{
         type: Boolean,
         default: false
@@ -37,6 +56,11 @@ const userSchema = new Schema<UserI>({
     },
     otpCode:{
         type: String
+    },
+    role:{
+        type: String,
+        enum: ["user","teacher","admin"],
+        default: "user"
     }
 },{timestamps: true})
 

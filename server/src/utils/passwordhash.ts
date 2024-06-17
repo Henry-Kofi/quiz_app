@@ -8,7 +8,6 @@ class Password{
     }
     validate(password:string,hashed:string,salt:string){
         const checkHash = pbkdf2Sync(password, salt, 10000, 64, 'sha512').toString('hex')
-        console.log("hashed",checkHash)
         if(hashed != checkHash){
             return false
         }

@@ -15,7 +15,7 @@ class Token{
     }
     private secret = config().tokenSecret
     generateToken = async (user:UserI) => {
-        const token = jwt.sign({_id:user._id,email: user.email,isVerified: user.isVerified},this.secret,{
+        const token = jwt.sign({_id:user._id,email: user.email,role:user.role,isVerified: user.isVerified},this.secret,{
             expiresIn:"100d"
         })
         return token
@@ -24,7 +24,7 @@ class Token{
         try {
             const decodedToken = jwt.verify(token,this.secret) as UserI
             if(!decodedToken){
-                return {success:false,message:"invalid token"}
+                return {success:false,message:"Access not granted"}
             }
             if(!decodedToken.isVerified){
                 return {success: false, message: "user not verified"}
