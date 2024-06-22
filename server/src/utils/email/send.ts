@@ -22,16 +22,19 @@ const sendMail = async(reciever:string,message?: string,subject?:string,html?: s
     
     try {
         const mailed = await transporter.sendMail(mailOption)
+        
         if(mailed.accepted){
-            return "accepted"
+            console.log("mail sent");
+            return {success: true,message:"accepted"}
         }
         if(mailed.pending){
-            return "pending"
+            console.log("mail pending")
+            return {success:false,message:"pending"}
         }
         if(mailed.rejected){
-            return "rejected"
+            console.log("mail rejected")
+            return {success: false, message:"rejected"}
         }
-        return mailed.response
     } catch (error) {
         throw new Error("Mail: "+error)
     }

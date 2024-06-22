@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import response from "../../utils/response";
 import userModel from "../../model/user";
 import encrypt from "../../utils/passwordhash";
+import token from "../helpers/token";
 
 const login  = async (req:Request,res:Response) => {
     const {email,password} = req.body
@@ -19,8 +20,15 @@ const login  = async (req:Request,res:Response) => {
         if(!validPassword){
             return response.unsuccess(res,400,"Invalid email or password")
         }
-        console.log("User pass",existingUser.password.password)
-        response.success(res,200,"Login successful",)
+        const newToken = await token.generateToken(existingUser)
+        return res.status(200).json({
+            success:true,
+            message: "Login successful",
+            user:{
+                token: newToken,
+                role: existingUser.role
+            }
+        })
     } catch (error) {
         const message = "internal server error"
        response.unsuccess(res,500,message)

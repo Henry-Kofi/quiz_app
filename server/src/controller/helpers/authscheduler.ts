@@ -2,17 +2,15 @@ import userModel, { UserI } from "../../model/user"
 import sendMail from "../../utils/email/send"
 import otpTemplate from "../../utils/email/templates/otp"
 import token from "./token"
+import {SMSAPI} from "smsapi"
+
+const smsapi = new SMSAPI("secret")
 
 class AuthScheduler{
     fiveMinutes = 5 * 60 * 1000
-    mailHeading = "Verification Otp"
 
     schedule = async (_id: string,email: string,otp:string) => {
         try {
-            const sendOtpToMail = await sendMail(email,"",this.mailHeading,otpTemplate(otp))
-            if(sendOtpToMail == "rejected"){
-                return false
-            }
             setTimeout(() => {
                 this.deleteUser(_id)
             },this.fiveMinutes)
