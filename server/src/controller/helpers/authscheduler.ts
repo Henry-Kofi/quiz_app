@@ -7,7 +7,7 @@ import {SMSAPI} from "smsapi"
 const smsapi = new SMSAPI("secret")
 
 class AuthScheduler{
-    fiveMinutes = .9 * 60 * 1000
+    fiveMinutes = 5 * 60 * 1000
 
     schedule = async (_id: string,email: string,otp:string) => {
         try {
