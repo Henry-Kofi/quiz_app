@@ -8,6 +8,9 @@ class Token{
             if(!existingUser){
                 return false
             }
+            if(!existingUser.isVerified){
+                return false
+            }
             return true
         } catch (error) {
             throw error
@@ -26,12 +29,9 @@ class Token{
             if(!decodedToken){
                 return {success:false,message:"Access not granted"}
             }
-            if(!decodedToken.isVerified){
-                return {success: false, message: "user not verified"}
-            }
             const userExists = this.checkUser(decodedToken._id)
             if(!userExists){
-                return {success: false, message: "user does not exist"}
+                return {success: false, message: "user does not exist/verified"}
             }
             return {success: true, data: decodedToken}
         } catch (error) {
