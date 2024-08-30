@@ -1,15 +1,16 @@
-import { Router } from "express";
-import { GetProfile, Login, Profile, Register, ResetPassword, SendVerificationMail, Verify } from "../controller/user";
-import { upload } from "../middleware/user";
+import {Router} from 'express'
+import { Register } from '../controller/user/register'
+import {loginValidator, registerValidator, verifyValidator} from "../middleware/validator/user"
+import { Verify } from '../controller/user/verify';
+import { Login } from '../controller/user/login';
+import { profileUpload } from '../middleware/storage';
+import { Profile } from '../controller/user/profile';
 
-const AuthRoute = Router()
+const AuthRoute: Router = Router()
 
-AuthRoute.post("/register",Register)
-AuthRoute.post("/login",Login)
-AuthRoute.put("/verify",Verify)
-AuthRoute.put("/verification/mail",SendVerificationMail)
-AuthRoute.put("/reset/password",ResetPassword)
-AuthRoute.put("/profile/update",upload.single("file"),Profile)
-AuthRoute.get("/profile/get",GetProfile)
+AuthRoute.post('/register',registerValidator,Register);
+AuthRoute.post("/verify/:email",verifyValidator,Verify);
+AuthRoute.post("/login",loginValidator,Login);
+AuthRoute.put("/profile",profileUpload.single('image'),Profile)
 
 export default AuthRoute

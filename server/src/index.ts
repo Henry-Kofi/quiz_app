@@ -1,25 +1,25 @@
-import express,{Application} from "express"
-import * as http from "http"
-import config from "./utils/env"
-import createExternalConnections from "./externalconnections"
-import AuthRoute from "./route/user"
-// import
+import express,{Application} from 'express'
+import {Server,createServer} from 'node:http'
+import 'dotenv/config'
+
+
+import createExternalConnection from './utils/externalConnections'
+import AuthRoute from './route/user'
 
 const app: Application = express()
-const server = http.createServer(app)
+const server: Server = createServer(app)
 
-app.use(express.json())
-// app.use(config)
-app.use("/api/user",AuthRoute)
+app.use(express.json());
 
-const port = config().port
 
-createExternalConnections().then(() => startApp()).catch(error => console.error(error)
-)
+app.use("/api/users",AuthRoute)
+const port = process.env.PORT
+
+createExternalConnection().then(() => startApp()).catch(error => console.log(error))
 
 const startApp = () => {
-    server.listen(port,() => {
-        console.log(`Server running on port ${port}`);
-        
-    })
+  server.listen(port,()=>{
+    console.log(`Server listening on ${port}`)
+  })
 }
+

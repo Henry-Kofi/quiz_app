@@ -18,3 +18,10 @@
     <li>A modal dialog will appear with the password. Get that password and use it in your code.</li>
     </ol>
 </div>
+
+<!-- Routes -->
+<h3>Routes</h3>
+<details>
+  <summary>Register route</summary>
+  <b></p> 
+</details>

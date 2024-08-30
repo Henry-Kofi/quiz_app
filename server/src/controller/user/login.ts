@@ -1,38 +1,48 @@
-import { Request, Response } from "express";
-import response from "../../utils/response";
-import userModel from "../../model/user";
-import encrypt from "../../utils/passwordhash";
-import token from "../helpers/token";
+import { Request,Response } from "express";
+import * as bcrypt from 'bcryptjs'
 
-const login  = async (req:Request,res:Response) => {
+import { UserI,userModel } from "../../model/user";
+import { generateToken } from "./helpers/token";
+
+
+export const Login = async (req:Request,res:Response) => {
     const {email,password} = req.body
     try {
-        // TODO ==> create a class funkction that verifies the user email
-        // check isVerified
-        // check if token is valid by creating a token validator and generator
-        // and for the if token is valid, check the database if it verified
-        // if !verified, send otp to the mail for validation again 
+        // check if email is in the database
         const existingUser = await userModel.findOne({email:email})
         if(!existingUser){
-            return response.unsuccess(res,404,"User not found")
+            return res.status(404).json({
+                success: false,
+                message: "User does not exist"
+            })
         }
-        const validPassword = await encrypt.validate(password,existingUser.password.password,existingUser.password.salt)
-        if(!validPassword){
-            return response.unsuccess(res,400,"Invalid email or password")
+        // check if user account is enabled
+        if(existingUser.isDisabled){
+            return res.status(401).json({
+                success: false,
+                message: "User account disabled. Contact admin to enable account❓"
+            })
         }
-        const newToken = await token.generateToken(existingUser)
+        // validate password
+        const isValidPassword = await bcrypt.compare(password,existingUser.password)
+        if(!isValidPassword){
+            return res.status(404).json({
+                success: false,
+                message:"Invalid password❗"
+            })
+        }
+        //  generate token code
+        const token = await generateToken(existingUser) as string
+        res.cookie("token",token,{expires: new Date(Date.now()+(12*1000*60*60))}) 
+
         return res.status(200).json({
-            success:true,
-            message: "Login successful",
-            user:{
-                token: newToken,
-                role: existingUser.role
-            }
+            success: true,
+            message: "✔Login successful"
         })
     } catch (error) {
-        const message = "internal server error"
-       response.unsuccess(res,500,message)
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        })
     }
 }
-
-export default login
